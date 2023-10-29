@@ -19,9 +19,10 @@ public class UserService {
 
     public CustomUser addUser() {
         CustomUser user = CustomUser.builder()
-                .username("user1")
+                .username("user_admin")
                 .password(passwordEncoder.encode("password"))
                 .emailAddress("user@example.com")
+                .authorities("ROLE_ADMIN")
                 .build();
         return create(user);
     }
