@@ -9,11 +9,14 @@ import org.hibernate.type.SqlTypes;
 import java.util.Objects;
 import java.util.UUID;
 
+@Builder
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Authority {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

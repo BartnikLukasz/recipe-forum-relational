@@ -1,5 +1,6 @@
 package bartnik.master.app.relational.recipeforum.model;
 
+import bartnik.master.app.relational.recipeforum.model.enums.Provider;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -34,7 +35,12 @@ public class CustomUser {
     @NonNull
     private String password;
 
-    private String emailAddress;
+    private String email;
+
+    private boolean enabled;
+
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
 
     @Singular
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
