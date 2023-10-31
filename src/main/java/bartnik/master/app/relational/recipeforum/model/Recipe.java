@@ -1,6 +1,8 @@
 package bartnik.master.app.relational.recipeforum.model;
 
+import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
@@ -10,10 +12,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
+@Builder
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class Recipe {
 
     @Id
@@ -22,9 +26,25 @@ public class Recipe {
     @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
+    @NotBlank
+    private String title;
+
+    @Lob
+    @NotBlank
     private String content;
 
+    @Lob
+    @NotBlank
     private String ingredients;
+
+    @NotBlank
+    private String tags;
+
+    @Builder.Default
+    Integer numberOfLikes = 0;
+
+    @Builder.Default
+    Integer numberOfDislikes = 0;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -33,6 +53,13 @@ public class Recipe {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private CustomUser user;
+
+    public void apply(UpdateRecipeRequest request) {
+        this.title = request.getTitle();
+        this.content = request.getContent();
+        this.ingredients = request.getIngredients();
+        this.tags = request.getTags();
+    }
 
     @Override
     public final boolean equals(Object o) {

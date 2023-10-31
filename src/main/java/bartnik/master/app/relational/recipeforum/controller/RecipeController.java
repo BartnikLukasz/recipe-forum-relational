@@ -1,18 +1,62 @@
 package bartnik.master.app.relational.recipeforum.controller;
 
+import bartnik.master.app.relational.recipeforum.dto.request.CreateRecipeRequest;
+import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
+import bartnik.master.app.relational.recipeforum.dto.response.RecipeDetailsResponse;
+import bartnik.master.app.relational.recipeforum.dto.response.RecipeResponse;
+import bartnik.master.app.relational.recipeforum.mapper.RecipeMapper;
+import bartnik.master.app.relational.recipeforum.service.RecipeService;
 import bartnik.master.app.relational.recipeforum.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.net.http.HttpResponse;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @RequiredArgsConstructor
-@RestController("/")
+@RestController
+@RequestMapping("/recipe")
 public class RecipeController {
 
     private final UserService userService;
+    private final RecipeService recipeService;
+    private final RecipeMapper recipeMapper;
 
-    @GetMapping("")
+    @PostMapping
+    public ResponseEntity<RecipeResponse> createRecipe(@RequestBody  @Validated CreateRecipeRequest request) {
+        return ResponseEntity.ok(recipeMapper.map(recipeService.createRecipe(request)));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RecipeDetailsResponse> getRecipe(@PathVariable UUID id) {
+        return ResponseEntity.ok(recipeMapper.mapDetails(recipeService.getRecipeById(id)));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<RecipeResponse> updateRecipe(@PathVariable UUID id, @RequestBody @Validated UpdateRecipeRequest request) {
+        return ResponseEntity.ok(recipeMapper.map(recipeService.updateRecipe(id, request)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<RecipeResponse> deleteRecipe(@PathVariable UUID id) {
+        recipeService.deleteRecipe(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<RecipeDetailsResponse>> getAllRecipes() {
+        return ResponseEntity.ok(recipeMapper.map(recipeService.getAllRecipes()));
+    }
+
+    @GetMapping("/empty")
     public String getEmpty() {
         return "empty";
     }

@@ -1,6 +1,7 @@
 package bartnik.master.app.relational.recipeforum.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
@@ -16,7 +17,6 @@ import java.util.UUID;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
 public class CustomUser {
 
@@ -27,11 +27,11 @@ public class CustomUser {
     private UUID id;
 
 
-    @NonNull
+    @NotBlank
     @Column(unique = true)
     private String username;
 
-    @NonNull
+    @NotBlank
     private String password;
 
     private String emailAddress;

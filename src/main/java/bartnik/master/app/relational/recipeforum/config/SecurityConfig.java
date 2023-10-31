@@ -27,9 +27,6 @@ public class SecurityConfig {
         return http.httpBasic()
                 .and().csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/").permitAll()
-                .and()
-                .authorizeHttpRequests()
                 .anyRequest().authenticated()
                 .and().formLogin().and().build();
     }
