@@ -16,7 +16,7 @@ import java.util.UUID;
 @Setter
 @ToString
 @RequiredArgsConstructor
-@Entity
+@Entity(name="custom_user")
 @AllArgsConstructor
 public class CustomUser {
 

@@ -11,7 +11,7 @@ import org.hibernate.type.SqlTypes;
 import java.util.Objects;
 import java.util.UUID;
 
-@Entity
+@Entity(name = "recipe")
 @Builder
 @Getter
 @Setter

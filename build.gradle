@@ -26,6 +26,7 @@ dependencies {
 	implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '5.0.0', classifier: 'jakarta'
 	annotationProcessor group: 'com.querydsl', name: 'querydsl-apt', version: '5.0.0', classifier: 'jakarta'
 	annotationProcessor group: 'jakarta.persistence', name: 'jakarta.persistence-api', version: '3.1.0'
+	annotationProcessor 'jakarta.annotation:jakarta.annotation-api:2.1.1'
 
 	//lombok
 	compileOnly 'org.projectlombok:lombok'
@@ -37,6 +38,7 @@ dependencies {
 
 	//db
 	implementation 'mysql:mysql-connector-java:8.0.28'
+	implementation 'org.hibernate:hibernate-core:6.3.1.Final'
 
 	//spring
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'

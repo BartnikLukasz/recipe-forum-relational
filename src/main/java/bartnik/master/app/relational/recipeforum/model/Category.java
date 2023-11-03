@@ -17,7 +17,7 @@ import java.util.UUID;
 @ToString
 @RequiredArgsConstructor
 @Builder
-@Entity
+@Entity(name="category")
 @AllArgsConstructor
 public class Category {
     @Id

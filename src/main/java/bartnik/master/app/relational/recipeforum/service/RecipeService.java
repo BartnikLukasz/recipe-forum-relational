@@ -2,18 +2,17 @@ package bartnik.master.app.relational.recipeforum.service;
 
 import bartnik.master.app.relational.recipeforum.dto.request.CreateRecipeRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
-import bartnik.master.app.relational.recipeforum.dto.response.RecipeResponse;
 import bartnik.master.app.relational.recipeforum.model.Recipe;
 import bartnik.master.app.relational.recipeforum.repository.CategoryRepository;
 import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
 import bartnik.master.app.relational.recipeforum.repository.RecipeRepository;
+import bartnik.master.app.relational.recipeforum.repository.RecipeRepositoryCrud;
 import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -23,6 +22,7 @@ public class RecipeService {
     private final CustomUserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
+    private final RecipeRepositoryCrud recipeRepositoryCrud;
 
     public Recipe createRecipe(CreateRecipeRequest request) {
         var currentUser = UserUtil.getCurrentUser();
@@ -71,5 +71,41 @@ public class RecipeService {
         }
 
         recipeRepository.deleteById(id);
+    }
+
+    public Recipe rateRecipe(UUID id, boolean liked) {
+        var currentUser = UserUtil.getCurrentUser();
+        var user = userRepository.getByUsername(currentUser.getUsername());
+        var recipe = recipeRepository.getReferenceById(id);
+
+        if (!recipeRepositoryCrud.isReactedByUser(id, user.getId(), liked)) {
+            var likedRecipes = user.getLikedRecipes();
+            var dislikedRecipes = user.getDislikedRecipes();
+
+            if (liked) {
+                likedRecipes.add(recipe);
+                dislikedRecipes.removeIf(dislikedRecipe -> {
+                    if (dislikedRecipe.equals(recipe)) {
+                        recipe.setNumberOfDislikes(recipe.getNumberOfDislikes() - 1);
+                        return true;
+                    }
+                    return false;
+                });
+                recipe.setNumberOfLikes(recipe.getNumberOfLikes() + 1);
+            } else {
+                dislikedRecipes.add(recipe);
+                likedRecipes.removeIf(likedRecipe -> {
+                    if (likedRecipe.equals(recipe)) {
+                        recipe.setNumberOfLikes(recipe.getNumberOfLikes() - 1);
+                        return true;
+                    }
+                    return false;
+                });
+                recipe.setNumberOfDislikes(recipe.getNumberOfDislikes() + 1);
+            }
+
+            userRepository.save(user);
+        }
+        return recipeRepository.save(recipe);
     }
 }

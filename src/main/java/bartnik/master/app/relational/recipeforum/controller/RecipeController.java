@@ -56,6 +56,11 @@ public class RecipeController {
         return ResponseEntity.ok(recipeMapper.map(recipeService.getAllRecipes()));
     }
 
+    @PutMapping("/{id}/rate")
+    public ResponseEntity<RecipeResponse> rateRecipe(@RequestParam("liked") boolean liked, @PathVariable UUID id) {
+        return ResponseEntity.ok(recipeMapper.map(recipeService.rateRecipe(id, liked)));
+    }
+
     @GetMapping("/empty")
     public String getEmpty() {
         return "empty";
