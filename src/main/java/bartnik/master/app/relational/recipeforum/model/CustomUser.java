@@ -44,6 +44,11 @@ public class CustomUser {
 
     @OneToMany
     @ToString.Exclude
+    private Set<Comment> comments;
+
+
+    @OneToMany
+    @ToString.Exclude
     private Set<Recipe> likedRecipes;
 
     @OneToMany

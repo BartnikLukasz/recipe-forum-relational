@@ -8,7 +8,9 @@ import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
 
+import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "recipe")
@@ -46,6 +48,8 @@ public class Recipe {
     @Builder.Default
     Integer numberOfDislikes = 0;
 
+    private LocalDate created = LocalDate.now();
+
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;
@@ -53,6 +57,10 @@ public class Recipe {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private CustomUser user;
+
+    @OneToMany
+    @ToString.Exclude
+    private Set<Comment> comments;
 
     public void apply(UpdateRecipeRequest request) {
         this.title = request.getTitle();
