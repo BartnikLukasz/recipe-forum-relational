@@ -1,12 +1,15 @@
 package bartnik.master.app.relational.recipeforum.dto.response;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -14,14 +17,15 @@ import java.util.List;
 @AllArgsConstructor
 @SuperBuilder
 @Validated
-public class RecipeDetailsResponse extends RecipeResponse {
+public class CommentResponse {
 
     @NotNull
-    CategoryLiteResponse category;
+    UUID id;
 
-    @Builder.Default
-    List<CommentResponse> comments = new ArrayList<>();
+    @NotBlank
+    String content;
 
-    @NotNull
-    UserResponse user;
+    @NotBlank
+    String username;
+
 }

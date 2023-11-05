@@ -48,6 +48,7 @@ public class Recipe {
     @Builder.Default
     Integer numberOfDislikes = 0;
 
+    @Builder.Default
     private LocalDate created = LocalDate.now();
 
     @ManyToOne

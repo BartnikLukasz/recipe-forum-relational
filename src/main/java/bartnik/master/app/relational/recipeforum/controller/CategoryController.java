@@ -32,7 +32,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<CategoryLiteResponse> updateCategory(@PathVariable UUID id) {
+    public ResponseEntity<CategoryLiteResponse> deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
     }

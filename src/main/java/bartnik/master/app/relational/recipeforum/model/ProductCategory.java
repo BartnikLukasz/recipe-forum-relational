@@ -2,21 +2,18 @@ package bartnik.master.app.relational.recipeforum.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
+import lombok.Builder;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
-@Builder
-@Getter
-@Setter
-@ToString
-@RequiredArgsConstructor
-@AllArgsConstructor
-@Entity(name = "comment")
-public class Comment {
+@Entity(name = "product_category")
+public class ProductCategory {
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
@@ -24,16 +21,10 @@ public class Comment {
     private UUID id;
 
     @NotBlank
-    private String content;
+    private String name;
 
+    @OneToMany
+    @ToString.Exclude
     @Builder.Default
-    private LocalDate created = LocalDate.now();
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private CustomUser user;
-
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
-    private Recipe recipe;
+    private Set<Product> products = new HashSet<>();
 }

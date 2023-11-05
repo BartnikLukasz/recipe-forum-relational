@@ -1,5 +1,6 @@
 package bartnik.master.app.relational.recipeforum.mapper;
 
+import bartnik.master.app.relational.recipeforum.dto.response.CommentResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.RecipeDetailsResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.RecipeResponse;
 import bartnik.master.app.relational.recipeforum.model.Recipe;
@@ -14,10 +15,12 @@ public interface RecipeMapper {
 
     CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
     UserMapper userMapper = Mappers.getMapper(UserMapper.class);
+    CommentMapper commentMapper = Mappers.getMapper(CommentMapper.class);
 
     RecipeResponse map(Recipe recipe);
 
-    @Mapping(target = "category",qualifiedByName = "categoryLite")
+    @Mapping(target = "comments", qualifiedByName = "comment")
+    @Mapping(target = "category", qualifiedByName = "categoryLite")
     RecipeDetailsResponse mapDetails(Recipe recipe);
 
     default List<RecipeDetailsResponse> map(List<Recipe> recipes) {
