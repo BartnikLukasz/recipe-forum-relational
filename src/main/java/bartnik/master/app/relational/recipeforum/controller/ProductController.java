@@ -1,15 +1,13 @@
-package bartnik.master.app.relational.Productforum.controller;
+package bartnik.master.app.relational.recipeforum.controller;
 
 import bartnik.master.app.relational.recipeforum.dto.request.CreateProductRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateProductRequest;
-import bartnik.master.app.relational.recipeforum.dto.response.ProductDetailsResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.ProductResponse;
 import bartnik.master.app.relational.recipeforum.mapper.ProductMapper;
 import bartnik.master.app.relational.recipeforum.service.ProductService;
 import bartnik.master.app.relational.recipeforum.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +16,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/Product")
+@RequestMapping("/product")
 public class ProductController {
 
     private final UserService userService;

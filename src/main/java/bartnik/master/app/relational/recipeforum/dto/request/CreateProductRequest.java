@@ -24,6 +24,7 @@ public class CreateProductRequest {
     @NotNull
     private BigDecimal price;
 
+    @Builder.Default
     private Integer availability = 0;
 
     @NotNull

@@ -1,10 +1,7 @@
 package bartnik.master.app.relational.recipeforum.service;
 
-import bartnik.master.app.relational.recipeforum.dto.request.CreateCategoryRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.CreateCommentRequest;
-import bartnik.master.app.relational.recipeforum.dto.request.UpdateCategoryRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateCommentRequest;
-import bartnik.master.app.relational.recipeforum.model.Category;
 import bartnik.master.app.relational.recipeforum.model.Comment;
 import bartnik.master.app.relational.recipeforum.repository.CommentRepository;
 import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
@@ -33,7 +30,7 @@ public class CommentService {
                 .recipe(recipe)
                 .build();
 
-        return commentRepository.save(category);
+        return commentRepository.save(comment);
     }
 
     public Comment updateComment(UUID id, UpdateCommentRequest request) {

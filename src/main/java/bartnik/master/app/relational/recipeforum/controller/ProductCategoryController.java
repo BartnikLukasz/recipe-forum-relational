@@ -2,6 +2,7 @@ package bartnik.master.app.relational.recipeforum.controller;
 
 import bartnik.master.app.relational.recipeforum.dto.request.CreateProductCategoryRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateProductCategoryRequest;
+import bartnik.master.app.relational.recipeforum.dto.response.CategoryLiteResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.ProductCategoryLiteResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.ProductCategoryResponse;
 import bartnik.master.app.relational.recipeforum.mapper.ProductCategoryMapper;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -37,9 +39,14 @@ public class ProductCategoryController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<ProductCategoryLiteResponse>> getAllCategories() {
+        return ResponseEntity.ok(mapper.map(productCategoryService.getAllProductCategories()));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ProductCategoryResponse> getProductsForProductCategory(@PathVariable UUID id) {
-        return ResponseEntity.ok(mapper.map(productCategoryService.getRecipesForProductCategory(id)));
+        return ResponseEntity.ok(mapper.map(productCategoryService.getProductsForProductCategory(id)));
     }
 
 }

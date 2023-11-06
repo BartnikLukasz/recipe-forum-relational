@@ -23,5 +23,9 @@ public class UpdateProductRequest {
     @NotNull
     private BigDecimal price;
 
+    @Builder.Default
     private Integer availability = 0;
+
+    @NotNull
+    UUID productCategory;
 }

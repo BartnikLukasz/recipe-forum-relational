@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -35,6 +36,11 @@ public class CategoryController {
     public ResponseEntity<CategoryLiteResponse> deleteCategory(@PathVariable UUID id) {
         categoryService.deleteCategory(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CategoryLiteResponse>> getAllCategories() {
+        return ResponseEntity.ok(mapper.map(categoryService.getAllCategories()));
     }
 
     @GetMapping("/{id}")

@@ -10,6 +10,9 @@ import org.mapstruct.Named;
 import org.mapstruct.ap.internal.processor.MapperServiceProcessor;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Mapper(componentModel = "spring")
 public interface CategoryMapper {
 
@@ -17,4 +20,10 @@ public interface CategoryMapper {
 
     @Named("categoryLite")
     CategoryLiteResponse mapLite(Category category);
+
+    default List<CategoryLiteResponse> map(List<Category> allCategories) {
+        return allCategories.stream()
+                .map(this::mapLite)
+                .collect(Collectors.toList());
+    }
 }

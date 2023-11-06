@@ -38,20 +38,30 @@ public class CustomUser {
 
     private String authorities;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private Set<Recipe> recipes;
 
-    @OneToMany
+    @OneToMany(mappedBy = "user")
     @ToString.Exclude
     private Set<Comment> comments;
 
 
-    @OneToMany
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "custom_users_liked_recipes",
+            joinColumns = { @JoinColumn(name = "custom_user_id")},
+            inverseJoinColumns = { @JoinColumn(name = "liked_recipe_id")}
+    )
     @ToString.Exclude
     private Set<Recipe> likedRecipes;
 
-    @OneToMany
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "custom_users_disliked_recipes",
+            joinColumns = { @JoinColumn(name = "custom_user_id")},
+            inverseJoinColumns = { @JoinColumn(name = "disliked_recipe_id")}
+    )
     @ToString.Exclude
     private Set<Recipe> dislikedRecipes;
 

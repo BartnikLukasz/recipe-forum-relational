@@ -10,7 +10,7 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses = {CategoryMapper.class, UserMapper.class})
+@Mapper(componentModel = "spring", uses = {CategoryMapper.class, UserMapper.class, CommentMapper.class})
 public interface RecipeMapper {
 
     CategoryMapper categoryMapper = Mappers.getMapper(CategoryMapper.class);
@@ -19,7 +19,7 @@ public interface RecipeMapper {
 
     RecipeResponse map(Recipe recipe);
 
-    @Mapping(target = "comments", qualifiedByName = "comment")
+    @Mapping(target = "comments", qualifiedByName = "commentList")
     @Mapping(target = "category", qualifiedByName = "categoryLite")
     RecipeDetailsResponse mapDetails(Recipe recipe);
 

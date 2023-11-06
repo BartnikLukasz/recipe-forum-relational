@@ -44,7 +44,7 @@ public class ProductService {
 
     public Product updateProduct(UUID id, UpdateProductRequest request) {
         var product = productRepository.getReferenceById(id);
-        var category = product.getProductCategory();
+        var productCategory = product.getProductCategory();
 
         if (!product.getProductCategory().getId().equals(request.getProductCategory())) {
             productCategory = productCategoryRepository.getReferenceById(request.getProductCategory());

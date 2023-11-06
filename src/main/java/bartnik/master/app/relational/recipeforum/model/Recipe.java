@@ -9,6 +9,7 @@ import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -59,9 +60,15 @@ public class Recipe {
     @JoinColumn(name = "user_id")
     private CustomUser user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "recipe")
     @ToString.Exclude
     private Set<Comment> comments;
+
+    @ManyToMany(mappedBy = "likedRecipes")
+    private Set<CustomUser> likedByUsers = new HashSet<CustomUser>();
+
+    @ManyToMany(mappedBy = "dislikedRecipes")
+    private Set<CustomUser> dislikedByUsers = new HashSet<CustomUser>();
 
     public void apply(UpdateRecipeRequest request) {
         this.title = request.getTitle();

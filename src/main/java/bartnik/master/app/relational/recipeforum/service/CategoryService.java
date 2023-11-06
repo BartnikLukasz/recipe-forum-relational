@@ -12,6 +12,7 @@ import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,5 +42,9 @@ public class CategoryService {
 
     public Category getRecipesForCategory(UUID id) {
         return categoryRepository.getReferenceById(id);
+    }
+
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll();
     }
 }

@@ -8,6 +8,7 @@ import bartnik.master.app.relational.recipeforum.repository.ProductCategoryRepos
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -37,5 +38,9 @@ public class ProductCategoryService {
 
     public ProductCategory getProductsForProductCategory(UUID id) {
         return productCategoryRepository.getReferenceById(id);
+    }
+
+    public List<ProductCategory> getAllProductCategories() {
+        return productCategoryRepository.findAll();
     }
 }

@@ -17,8 +17,8 @@ import java.util.UUID;
 @ToString
 @RequiredArgsConstructor
 @Builder
-@Entity(name="category")
 @AllArgsConstructor
+@Entity(name="category")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -29,7 +29,7 @@ public class Category {
     @NotBlank
     private String name;
 
-    @OneToMany
+    @OneToMany(mappedBy = "category")
     @ToString.Exclude
     @Builder.Default
     private Set<Recipe> recipes = new HashSet<>();
