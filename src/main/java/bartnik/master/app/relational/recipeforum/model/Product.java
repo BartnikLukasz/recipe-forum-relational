@@ -10,6 +10,7 @@ import org.hibernate.type.SqlTypes;
 import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -37,6 +38,9 @@ public class Product {
 
     @Builder.Default
     private Integer availability = 0;
+
+    @OneToMany(mappedBy = "product")
+    private List<LineItem> lineItems;
 
     @ManyToOne
     @JoinColumn(name = "product_category_id")

@@ -1,5 +1,6 @@
 package bartnik.master.app.relational.recipeforum.service;
 
+import bartnik.master.app.relational.recipeforum.dto.request.OrderProductsRequest;
 import bartnik.master.app.relational.recipeforum.model.CustomUser;
 import bartnik.master.app.relational.recipeforum.model.Recipe;
 import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
@@ -10,7 +11,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -38,5 +38,9 @@ public class UserService {
         var currentUser = UserUtil.getCurrentUser();
         var user = customUserRepository.getByUsername(currentUser.getUsername());
         return customUserRepositoryCrud.getRecommendations(size, user.getId());
+    }
+
+    public void buyProducts(OrderProductsRequest request) {
+
     }
 }
