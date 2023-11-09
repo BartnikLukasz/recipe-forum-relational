@@ -7,18 +7,13 @@ import bartnik.master.app.relational.recipeforum.dto.response.RecipeResponse;
 import bartnik.master.app.relational.recipeforum.mapper.RecipeMapper;
 import bartnik.master.app.relational.recipeforum.service.RecipeService;
 import bartnik.master.app.relational.recipeforum.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpResponse;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -53,7 +48,7 @@ public class RecipeController {
 
     @GetMapping("/all")
     public ResponseEntity<List<RecipeDetailsResponse>> getAllRecipes() {
-        return ResponseEntity.ok(recipeMapper.map(recipeService.getAllRecipes()));
+        return ResponseEntity.ok(recipeMapper.mapDetails(recipeService.getAllRecipes()));
     }
 
     @PutMapping("/{id}/rate")

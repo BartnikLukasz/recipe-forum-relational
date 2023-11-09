@@ -1,7 +1,7 @@
 package bartnik.master.app.relational.recipeforum.mapper;
 
-import bartnik.master.app.relational.recipeforum.dto.response.CommentResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.RecipeDetailsResponse;
+import bartnik.master.app.relational.recipeforum.dto.response.RecipeLiteResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.RecipeResponse;
 import bartnik.master.app.relational.recipeforum.model.Recipe;
 import org.mapstruct.Mapper;
@@ -19,13 +19,21 @@ public interface RecipeMapper {
 
     RecipeResponse map(Recipe recipe);
 
+    RecipeLiteResponse mapLite(Recipe recipe);
+
     @Mapping(target = "comments", qualifiedByName = "commentList")
     @Mapping(target = "category", qualifiedByName = "categoryLite")
     RecipeDetailsResponse mapDetails(Recipe recipe);
 
-    default List<RecipeDetailsResponse> map(List<Recipe> recipes) {
+    default List<RecipeDetailsResponse> mapDetails(List<Recipe> recipes) {
         return recipes.stream()
                 .map(this::mapDetails)
+                .toList();
+    }
+
+    default List<RecipeLiteResponse> mapLite(List<Recipe> recipes) {
+        return recipes.stream()
+                .map(this::mapLite)
                 .toList();
     }
 }

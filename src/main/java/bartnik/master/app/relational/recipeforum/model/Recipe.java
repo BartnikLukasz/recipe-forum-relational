@@ -4,6 +4,8 @@ import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
@@ -65,6 +67,7 @@ public class Recipe {
     private Set<Comment> comments;
 
     @ManyToMany(mappedBy = "likedRecipes")
+    @Cascade(CascadeType.SAVE_UPDATE)
     private Set<CustomUser> likedByUsers = new HashSet<CustomUser>();
 
     @ManyToMany(mappedBy = "dislikedRecipes")

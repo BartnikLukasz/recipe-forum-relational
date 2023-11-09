@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -33,7 +34,7 @@ public class UserService {
         return create(user);
     }
 
-    public Set<Recipe> getRecommendations(Integer size) {
+    public List<Recipe> getRecommendations(Integer size) {
         var currentUser = UserUtil.getCurrentUser();
         var user = customUserRepository.getByUsername(currentUser.getUsername());
         return customUserRepositoryCrud.getRecommendations(size, user.getId());
