@@ -7,6 +7,7 @@ import bartnik.master.app.relational.recipeforum.model.Recipe;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -35,5 +36,9 @@ public interface RecipeMapper {
         return recipes.stream()
                 .map(this::mapLite)
                 .toList();
+    }
+
+    default Page<RecipeLiteResponse> mapPage(Page<Recipe> recipe) {
+        return recipe.map(this::mapLite);
     }
 }

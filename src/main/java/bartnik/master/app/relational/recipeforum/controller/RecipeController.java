@@ -1,19 +1,19 @@
 package bartnik.master.app.relational.recipeforum.controller;
 
 import bartnik.master.app.relational.recipeforum.dto.request.CreateRecipeRequest;
+import bartnik.master.app.relational.recipeforum.dto.request.RecipesFilterRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
 import bartnik.master.app.relational.recipeforum.dto.response.RecipeDetailsResponse;
+import bartnik.master.app.relational.recipeforum.dto.response.RecipeLiteResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.RecipeResponse;
 import bartnik.master.app.relational.recipeforum.mapper.RecipeMapper;
 import bartnik.master.app.relational.recipeforum.service.RecipeService;
-import bartnik.master.app.relational.recipeforum.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -21,7 +21,6 @@ import java.util.UUID;
 @RequestMapping("/recipe")
 public class RecipeController {
 
-    private final UserService userService;
     private final RecipeService recipeService;
     private final RecipeMapper recipeMapper;
 
@@ -46,30 +45,13 @@ public class RecipeController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<RecipeDetailsResponse>> getAllRecipes() {
-        return ResponseEntity.ok(recipeMapper.mapDetails(recipeService.getAllRecipes()));
+    @PostMapping("/all")
+    public ResponseEntity<Page<RecipeLiteResponse>> getAllRecipes(@RequestBody @Validated RecipesFilterRequest filter) {
+        return ResponseEntity.ok(recipeMapper.mapPage(recipeService.findRecipes(filter)));
     }
 
     @PutMapping("/{id}/rate")
     public ResponseEntity<RecipeResponse> rateRecipe(@RequestParam("liked") boolean liked, @PathVariable UUID id) {
         return ResponseEntity.ok(recipeMapper.map(recipeService.rateRecipe(id, liked)));
-    }
-
-    @GetMapping("/empty")
-    public String getEmpty() {
-        return "empty";
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_USER')")
-    @GetMapping("/recipe")
-    public String getRecipes() {
-        return "recipes";
-    }
-
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    @GetMapping("/addUser")
-    public String addUser() {
-        return userService.addUser().toString();
     }
 }

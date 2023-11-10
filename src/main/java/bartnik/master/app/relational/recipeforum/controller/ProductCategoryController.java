@@ -2,7 +2,6 @@ package bartnik.master.app.relational.recipeforum.controller;
 
 import bartnik.master.app.relational.recipeforum.dto.request.CreateProductCategoryRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateProductCategoryRequest;
-import bartnik.master.app.relational.recipeforum.dto.response.CategoryLiteResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.ProductCategoryLiteResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.ProductCategoryResponse;
 import bartnik.master.app.relational.recipeforum.mapper.ProductCategoryMapper;

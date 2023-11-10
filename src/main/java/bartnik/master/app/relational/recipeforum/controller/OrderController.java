@@ -4,7 +4,6 @@ import bartnik.master.app.relational.recipeforum.dto.request.OrderProductReportR
 import bartnik.master.app.relational.recipeforum.dto.request.OrderProductsRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.OrderReportRequest;
 import bartnik.master.app.relational.recipeforum.dto.response.ProductReportResponse;
-import bartnik.master.app.relational.recipeforum.dto.response.ProductsGroupedResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.OrderReportResponse;
 import bartnik.master.app.relational.recipeforum.mapper.OrderMapper;
 import bartnik.master.app.relational.recipeforum.service.OrderService;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController

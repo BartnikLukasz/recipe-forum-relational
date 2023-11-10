@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 public class CustomUserDetails implements UserDetails {
 
 
-    private String name;
-    private String password;
-    private List<GrantedAuthority> authorities;
+    private final String name;
+    private final String password;
+    private final List<GrantedAuthority> authorities;
 
     public CustomUserDetails(CustomUser customUser) {
         name=customUser.getUsername();

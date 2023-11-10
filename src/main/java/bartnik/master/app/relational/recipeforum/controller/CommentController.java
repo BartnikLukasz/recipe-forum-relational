@@ -1,10 +1,7 @@
 package bartnik.master.app.relational.recipeforum.controller;
 
-import bartnik.master.app.relational.recipeforum.dto.request.CreateCategoryRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.CreateCommentRequest;
-import bartnik.master.app.relational.recipeforum.dto.request.UpdateCategoryRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateCommentRequest;
-import bartnik.master.app.relational.recipeforum.dto.response.CategoryResponse;
 import bartnik.master.app.relational.recipeforum.dto.response.CommentResponse;
 import bartnik.master.app.relational.recipeforum.mapper.CommentMapper;
 import bartnik.master.app.relational.recipeforum.service.CommentService;
