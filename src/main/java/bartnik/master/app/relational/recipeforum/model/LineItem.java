@@ -10,7 +10,6 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity(name="line_item")
 @AllArgsConstructor

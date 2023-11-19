@@ -20,7 +20,6 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Recipe {
@@ -63,7 +62,6 @@ public class Recipe {
     private CustomUser user;
 
     @OneToMany(mappedBy = "recipe")
-    @ToString.Exclude
     private Set<Comment> comments;
 
     @ManyToMany(mappedBy = "likedRecipes")

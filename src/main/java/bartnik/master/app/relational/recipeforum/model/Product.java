@@ -1,13 +1,11 @@
 package bartnik.master.app.relational.recipeforum.model;
 
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateProductRequest;
-import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
-import org.springframework.format.annotation.NumberFormat;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -15,7 +13,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor

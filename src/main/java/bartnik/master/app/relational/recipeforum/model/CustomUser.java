@@ -15,7 +15,6 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity(name="custom_user")
 @AllArgsConstructor
@@ -40,14 +39,11 @@ public class CustomUser {
     private String authorities;
 
     @OneToMany(mappedBy = "user")
-    @ToString.Exclude
     private Set<Recipe> recipes;
 
     @OneToMany(mappedBy = "user")
-    @ToString.Exclude
     private List<Comment> comments;
 
-    @ToString.Exclude
     @OneToMany(mappedBy = "user")
     private List<Order> orders;
 
@@ -58,7 +54,6 @@ public class CustomUser {
             joinColumns = { @JoinColumn(name = "custom_user_id")},
             inverseJoinColumns = { @JoinColumn(name = "liked_recipe_id")}
     )
-    @ToString.Exclude
     private Set<Recipe> likedRecipes;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -67,7 +62,6 @@ public class CustomUser {
             joinColumns = { @JoinColumn(name = "custom_user_id")},
             inverseJoinColumns = { @JoinColumn(name = "disliked_recipe_id")}
     )
-    @ToString.Exclude
     private Set<Recipe> dislikedRecipes;
 
     @Override

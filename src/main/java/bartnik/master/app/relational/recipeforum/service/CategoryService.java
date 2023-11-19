@@ -1,14 +1,9 @@
 package bartnik.master.app.relational.recipeforum.service;
 
 import bartnik.master.app.relational.recipeforum.dto.request.CreateCategoryRequest;
-import bartnik.master.app.relational.recipeforum.dto.request.CreateRecipeRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateCategoryRequest;
 import bartnik.master.app.relational.recipeforum.model.Category;
-import bartnik.master.app.relational.recipeforum.model.Recipe;
 import bartnik.master.app.relational.recipeforum.repository.CategoryRepository;
-import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
-import bartnik.master.app.relational.recipeforum.repository.RecipeRepository;
-import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +14,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class CategoryService {
 
-    private final CustomUserRepository userRepository;
     private final CategoryRepository categoryRepository;
 
     public Category createCategory(CreateCategoryRequest request) {

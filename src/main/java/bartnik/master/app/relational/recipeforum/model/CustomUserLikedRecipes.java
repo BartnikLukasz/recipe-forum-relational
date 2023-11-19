@@ -1,11 +1,9 @@
 package bartnik.master.app.relational.recipeforum.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
 import java.util.UUID;
 
 @Setter
@@ -23,6 +21,5 @@ public class CustomUserLikedRecipes {
 
     @Column(name = "liked_recipe_id")
     private UUID recipeId;
-
 
 }

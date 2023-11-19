@@ -3,7 +3,6 @@ package bartnik.master.app.relational.recipeforum.service;
 import bartnik.master.app.relational.recipeforum.dto.request.CreateProductCategoryRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateProductCategoryRequest;
 import bartnik.master.app.relational.recipeforum.model.ProductCategory;
-import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
 import bartnik.master.app.relational.recipeforum.repository.ProductCategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductCategoryService {
 
-    private final CustomUserRepository userRepository;
     private final ProductCategoryRepository productCategoryRepository;
 
     public ProductCategory createProductCategory(CreateProductCategoryRequest request) {

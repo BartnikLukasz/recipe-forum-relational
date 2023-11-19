@@ -10,6 +10,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring", uses = {CategoryMapper.class, UserMapper.class, CommentMapper.class})
 public interface RecipeMapper {
@@ -32,7 +33,7 @@ public interface RecipeMapper {
                 .toList();
     }
 
-    default List<RecipeLiteResponse> mapLite(List<Recipe> recipes) {
+    default List<RecipeLiteResponse> mapLite(Set<Recipe> recipes) {
         return recipes.stream()
                 .map(this::mapLite)
                 .toList();

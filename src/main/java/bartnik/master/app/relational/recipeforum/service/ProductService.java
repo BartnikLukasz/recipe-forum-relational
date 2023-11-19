@@ -4,9 +4,7 @@ import bartnik.master.app.relational.recipeforum.dto.request.CreateProductReques
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateProductRequest;
 import bartnik.master.app.relational.recipeforum.model.Product;
 import bartnik.master.app.relational.recipeforum.repository.*;
-import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +14,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductService {
 
-    private final CustomUserRepository userRepository;
     private final ProductCategoryRepository productCategoryRepository;
     private final ProductRepository productRepository;
 
@@ -56,8 +53,6 @@ public class ProductService {
     }
 
     public void deleteProduct(UUID id) {
-        var product = productRepository.getReferenceById(id);
-
         productRepository.deleteById(id);
     }
 }

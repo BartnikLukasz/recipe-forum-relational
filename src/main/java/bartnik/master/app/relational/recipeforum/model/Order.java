@@ -7,15 +7,12 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Entity(name="orders")
 @AllArgsConstructor
@@ -32,7 +29,6 @@ public class Order {
     private CustomUser user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
-    @ToString.Exclude
     private List<LineItem> items;
 
     @Column(precision = 6, scale = 2)

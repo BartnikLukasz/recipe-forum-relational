@@ -12,7 +12,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
@@ -29,7 +28,6 @@ public class ProductCategory {
     private String name;
 
     @OneToMany(mappedBy = "productCategory")
-    @ToString.Exclude
     @Builder.Default
     private Set<Product> products = new HashSet<>();
 }

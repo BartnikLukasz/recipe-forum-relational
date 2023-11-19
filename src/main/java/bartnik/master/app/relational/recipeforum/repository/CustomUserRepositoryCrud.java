@@ -1,27 +1,20 @@
 package bartnik.master.app.relational.recipeforum.repository;
 
 import bartnik.master.app.relational.recipeforum.model.*;
-import com.querydsl.core.types.dsl.Expressions;
-import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.Tuple;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.query.criteria.JpaSubQuery;
 import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static bartnik.master.app.relational.recipeforum.model.QCustomUser.*;
 import static bartnik.master.app.relational.recipeforum.model.QCustomUserLikedRecipes.customUserLikedRecipes;
 import static bartnik.master.app.relational.recipeforum.model.QRecipe.*;
 
@@ -32,14 +25,14 @@ public class CustomUserRepositoryCrud {
     @PersistenceContext(name = "recipe-forum")
     EntityManager em;
 
-    public List<Recipe> getRecommendations(Integer size, UUID userId) {
+    public Set<Recipe> getRecommendations(Integer size, UUID userId) {
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
         var culr = new QCustomUserLikedRecipes("culr");
         var culr2 = new QCustomUserLikedRecipes("culr2");
         var culr3 = new QCustomUserLikedRecipes("culr3");
 
-        List<UserRatedRecipe> recommendedRecipes = queryFactory.select(culr3.recipeId, culr3.userId)
+        Set<UserRatedRecipe> recommendedRecipes = queryFactory.select(culr3.recipeId, culr3.userId)
                 .from(culr, culr2, culr3)
                 .where(culr.userId.eq(userId)
                         .and(culr.recipeId.eq(culr2.recipeId))
@@ -59,9 +52,9 @@ public class CustomUserRepositoryCrud {
                     userRatedRecipe.setUserId(tuple.get(culr3.userId));
                     return userRatedRecipe;
                 })
-                .toList();
+                .collect(Collectors.toSet());
 
-        return queryFactory.select(recipe)
+        return new HashSet<>(queryFactory.select(recipe)
                 .from(recipe, customUserLikedRecipes)
                 .where(customUserLikedRecipes.recipeId.eq(recipe.id)
                         .and(customUserLikedRecipes.userId.in(recommendedRecipes.stream()
@@ -73,7 +66,7 @@ public class CustomUserRepositoryCrud {
                 .groupBy(recipe.id)
                 .orderBy(recipe.count().desc())
                 .limit(size)
-                .fetch();
+                .fetch());
     }
 
     @Setter

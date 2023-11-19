@@ -3,7 +3,6 @@ package bartnik.master.app.relational.recipeforum.service;
 import bartnik.master.app.relational.recipeforum.dto.request.CreateRecipeRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.RecipesFilterRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
-import bartnik.master.app.relational.recipeforum.model.QRecipe;
 import bartnik.master.app.relational.recipeforum.model.Recipe;
 import bartnik.master.app.relational.recipeforum.repository.CategoryRepository;
 import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
@@ -11,10 +10,8 @@ import bartnik.master.app.relational.recipeforum.repository.RecipeRepository;
 import bartnik.master.app.relational.recipeforum.repository.RecipeRepositoryCrud;
 import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections4.PredicateUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,8 +19,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 

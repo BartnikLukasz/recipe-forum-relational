@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
@@ -30,7 +29,6 @@ public class Category {
     private String name;
 
     @OneToMany(mappedBy = "category")
-    @ToString.Exclude
     @Builder.Default
     private Set<Recipe> recipes = new HashSet<>();
 

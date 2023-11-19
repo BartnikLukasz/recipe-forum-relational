@@ -12,7 +12,6 @@ import java.util.UUID;
 @Builder
 @Getter
 @Setter
-@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Entity(name = "comment")

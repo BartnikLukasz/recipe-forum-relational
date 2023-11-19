@@ -5,25 +5,20 @@ import bartnik.master.app.relational.recipeforum.dto.request.OrderProductsReques
 import bartnik.master.app.relational.recipeforum.dto.request.OrderReportRequest;
 import bartnik.master.app.relational.recipeforum.model.LineItem;
 import bartnik.master.app.relational.recipeforum.model.Order;
-import bartnik.master.app.relational.recipeforum.model.QLineItem;
-import bartnik.master.app.relational.recipeforum.model.QOrder;
 import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
 import bartnik.master.app.relational.recipeforum.repository.LineItemRepository;
 import bartnik.master.app.relational.recipeforum.repository.OrderRepository;
 import bartnik.master.app.relational.recipeforum.repository.ProductRepository;
 import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
