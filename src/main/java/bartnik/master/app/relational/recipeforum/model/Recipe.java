@@ -1,14 +1,11 @@
 package bartnik.master.app.relational.recipeforum.model;
 
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.proxy.HibernateProxy;
-import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -16,28 +13,24 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "recipe")
+@Document("Recipe")
 @Builder
 @Getter
 @Setter
+@EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
 public class Recipe {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
-    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
     @NotBlank
     private String title;
 
-    @Lob
     @NotBlank
     private String content;
 
-    @Lob
     @NotBlank
     private String ingredients;
 
@@ -53,22 +46,22 @@ public class Recipe {
     @Builder.Default
     private LocalDate created = LocalDate.now();
 
-    @ManyToOne
-    @JoinColumn(name = "category_id")
+    @DocumentReference
     private Category category;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @DocumentReference
     private CustomUser user;
 
-    @OneToMany(mappedBy = "recipe")
+    @DocumentReference(lazy = true)
+    @EqualsAndHashCode.Exclude
     private Set<Comment> comments;
 
-    @ManyToMany(mappedBy = "likedRecipes")
-    @Cascade(CascadeType.SAVE_UPDATE)
+    @DocumentReference(lazy = true)
+    @EqualsAndHashCode.Exclude
     private Set<CustomUser> likedByUsers = new HashSet<CustomUser>();
 
-    @ManyToMany(mappedBy = "dislikedRecipes")
+    @DocumentReference(lazy = true)
+    @EqualsAndHashCode.Exclude
     private Set<CustomUser> dislikedByUsers = new HashSet<CustomUser>();
 
     public void apply(UpdateRecipeRequest request) {
@@ -76,21 +69,5 @@ public class Recipe {
         this.content = request.getContent();
         this.ingredients = request.getIngredients();
         this.tags = request.getTags();
-    }
-
-    @Override
-    public final boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
-        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
-        if (thisEffectiveClass != oEffectiveClass) return false;
-        Recipe recipe = (Recipe) o;
-        return getId() != null && Objects.equals(getId(), recipe.getId());
-    }
-
-    @Override
-    public final int hashCode() {
-        return this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode() : getClass().hashCode();
     }
 }

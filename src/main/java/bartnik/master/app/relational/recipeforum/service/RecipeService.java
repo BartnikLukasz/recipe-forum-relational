@@ -9,8 +9,6 @@ import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository
 import bartnik.master.app.relational.recipeforum.repository.RecipeRepository;
 import bartnik.master.app.relational.recipeforum.repository.RecipeRepositoryCrud;
 import bartnik.master.app.relational.recipeforum.util.UserUtil;
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,8 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 import java.util.UUID;
-
-import static bartnik.master.app.relational.recipeforum.model.QRecipe.recipe;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +32,7 @@ public class RecipeService {
     public Recipe createRecipe(CreateRecipeRequest request) {
         var currentUser = UserUtil.getCurrentUser();
         var user = userRepository.getByUsername(currentUser.getUsername());
-        var category = categoryRepository.getReferenceById(request.getCategory());
+        var category = categoryRepository.findById(request.getCategory()).orElseThrow();
 
         var recipe = Recipe.builder()
                 .title(request.getTitle())
@@ -51,20 +47,21 @@ public class RecipeService {
     }
 
     public Recipe getRecipeById(UUID id) {
-        return recipeRepository.getReferenceById(id);
+        return recipeRepository.findById(id).orElseThrow();
     }
 
     public Page<Recipe> findRecipes(RecipesFilterRequest filter) {
         Pageable pageable = PageRequest.of(filter.getPageNumber(), filter.getPageSize(), Sort.by(filter.getSortBy()));
-        return recipeRepository.findAll(buildPredicate(filter), pageable);
+//        return recipeRepository.findAll(buildPredicate(filter), pageable);
+        return null;
     }
 
     public Recipe updateRecipe(UUID id, UpdateRecipeRequest request) {
-        var recipe = recipeRepository.getReferenceById(id);
+        var recipe = recipeRepository.findById(id).orElseThrow();
         var category = recipe.getCategory();
 
         if (!recipe.getCategory().getId().equals(request.getCategory())) {
-            category = categoryRepository.getReferenceById(request.getCategory());
+            category = categoryRepository.findById(request.getCategory()).orElseThrow();
             recipe.setCategory(category);
         }
         recipe.apply(request);
@@ -74,7 +71,7 @@ public class RecipeService {
 
     public void deleteRecipe(UUID id) {
         var currentUser = UserUtil.getCurrentUser();
-        var recipe = recipeRepository.getReferenceById(id);
+        var recipe = recipeRepository.findById(id).orElseThrow();
 
         if (!currentUser.getUsername().equals(recipe.getUser().getUsername()) || UserUtil.isCurrentUserAdmin()) {
             throw new AccessDeniedException("User is not admin or the owner of this recipe.");
@@ -86,7 +83,7 @@ public class RecipeService {
     public Recipe rateRecipe(UUID id, boolean liked) {
         var currentUser = UserUtil.getCurrentUser();
         var user = userRepository.getByUsername(currentUser.getUsername());
-        var recipe = recipeRepository.getReferenceById(id);
+        var recipe = recipeRepository.findById(id).orElseThrow();
 
         if (!recipeRepositoryCrud.isReactedByUser(id, user.getId(), liked)) {
             var likedRecipes = user.getLikedRecipes();
@@ -118,18 +115,18 @@ public class RecipeService {
         return recipeRepository.save(recipe);
     }
 
-    private Predicate buildPredicate(RecipesFilterRequest filter) {
-        var booleanBuilder = new BooleanBuilder();
-
-        Optional.ofNullable(filter.getUserId()).ifPresent(userId -> booleanBuilder.and(recipe.user.id.eq(userId)));
-        Optional.ofNullable(filter.getTitleContains()).ifPresent(titleContains -> booleanBuilder.and(recipe.title.contains(titleContains)));
-        Optional.ofNullable(filter.getContentContains()).ifPresent(contentContains -> booleanBuilder.and(recipe.content.contains(contentContains)));
-        Optional.ofNullable(filter.getIngredientsContains()).ifPresent(ingredientsContains -> booleanBuilder.and(recipe.ingredients.contains(ingredientsContains)));
-        Optional.ofNullable(filter.getTagsContains()).ifPresent(tagsContains -> booleanBuilder.and(recipe.tags.contains(tagsContains)));
-        if (!filter.getCategoryIds().isEmpty()) {
-            booleanBuilder.and(recipe.category.id.in(filter.getCategoryIds()));
-        }
-
-        return booleanBuilder;
-    }
+//    private Predicate buildPredicate(RecipesFilterRequest filter) {
+//        var booleanBuilder = new BooleanBuilder();
+////
+////        Optional.ofNullable(filter.getUserId()).ifPresent(userId -> booleanBuilder.and(recipe.user.id.eq(userId)));
+////        Optional.ofNullable(filter.getTitleContains()).ifPresent(titleContains -> booleanBuilder.and(recipe.title.contains(titleContains)));
+////        Optional.ofNullable(filter.getContentContains()).ifPresent(contentContains -> booleanBuilder.and(recipe.content.contains(contentContains)));
+////        Optional.ofNullable(filter.getIngredientsContains()).ifPresent(ingredientsContains -> booleanBuilder.and(recipe.ingredients.contains(ingredientsContains)));
+////        Optional.ofNullable(filter.getTagsContains()).ifPresent(tagsContains -> booleanBuilder.and(recipe.tags.contains(tagsContains)));
+////        if (!filter.getCategoryIds().isEmpty()) {
+////            booleanBuilder.and(recipe.category.id.in(filter.getCategoryIds()));
+////        }
+//
+//        return booleanBuilder;
+//    }
 }

@@ -10,20 +10,16 @@ import bartnik.master.app.relational.recipeforum.repository.LineItemRepository;
 import bartnik.master.app.relational.recipeforum.repository.OrderRepository;
 import bartnik.master.app.relational.recipeforum.repository.ProductRepository;
 import bartnik.master.app.relational.recipeforum.util.UserUtil;
-import com.querydsl.core.BooleanBuilder;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
+import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static bartnik.master.app.relational.recipeforum.model.QLineItem.*;
-import static bartnik.master.app.relational.recipeforum.model.QOrder.order;
 
 @Service
 @RequiredArgsConstructor
@@ -41,9 +37,9 @@ public class OrderService {
 
         List<LineItem> items = request.getLineItems().stream()
                 .map(lineItem -> {
-            var product = productRepository.getReferenceById(lineItem.getProductId());
+            var product = productRepository.findById(lineItem.getProductId()).orElseThrow();
             if (product.getAvailability() < lineItem.getQuantity()) {
-                throw new EntityNotFoundException();
+                throw new ResourceNotFoundException();
             }
             product.setAvailability(product.getAvailability() - lineItem.getQuantity());
             productRepository.save(product);
@@ -70,50 +66,52 @@ public class OrderService {
     }
 
     public List<Order> generateReport(OrderReportRequest request) {
-        return IteratorUtils.toList(orderRepository.findAll(buildPredicate(request)).iterator());
+//        return IteratorUtils.toList(orderRepository.findAll(buildPredicate(request)).iterator());
+        return orderRepository.findAll();
     }
 
     public List<LineItem> generateProductReport(OrderProductReportRequest request) {
-        return IteratorUtils.toList(lineItemRepository.findAll(buildProductPredicate(request)).iterator());
+//        return IteratorUtils.toList(lineItemRepository.findAll(buildProductPredicate(request)).iterator());
+        return lineItemRepository.findAll();
     }
 
-    private BooleanBuilder buildPredicate(OrderReportRequest request) {
-        var booleanBuilder = new BooleanBuilder();
-            booleanBuilder.and(order.orderDate.after(request.getFrom().atStartOfDay())
-                    .and((order.orderDate.before(request.getTo().plusDays(1).atStartOfDay()))));
-
-        if (!request.getUserIds().isEmpty()) {
-            booleanBuilder.and(order.user.id.in(request.getUserIds()));
-        }
-        if (!request.getExcludedUserIds().isEmpty()) {
-            booleanBuilder.and(order.user.id.notIn(request.getExcludedUserIds()));
-        }
-        return booleanBuilder;
-    }
-
-    private BooleanBuilder buildProductPredicate(OrderProductReportRequest request) {
-        var booleanBuilder = new BooleanBuilder();
-        booleanBuilder.and(lineItem.order.orderDate.after(request.getFrom().atStartOfDay())
-                .and((lineItem.order.orderDate.before(request.getTo().plusDays(1).atStartOfDay()))));
-
-        if (!request.getUserIds().isEmpty()) {
-            booleanBuilder.and(lineItem.order.user.id.in(request.getUserIds()));
-        }
-        if (!request.getExcludedUserIds().isEmpty()) {
-            booleanBuilder.and(lineItem.order.user.id.notIn(request.getExcludedUserIds()));
-        }
-        if (!request.getProductIds().isEmpty()) {
-            booleanBuilder.and(lineItem.product.id.in(request.getProductIds()));
-        }
-        if (!request.getExcludedProductIds().isEmpty()) {
-            booleanBuilder.and(lineItem.product.id.notIn(request.getExcludedProductIds()));
-        }
-        if (!request.getProductCategoriesIds().isEmpty()) {
-            booleanBuilder.and(lineItem.product.productCategory.id.in(request.getProductCategoriesIds()));
-        }
-        if (!request.getExcludedProductCategoriesIds().isEmpty()) {
-            booleanBuilder.and(lineItem.product.productCategory.id.notIn(request.getExcludedProductCategoriesIds()));
-        }
-        return booleanBuilder;
-    }
+//    private BooleanBuilder buildPredicate(OrderReportRequest request) {
+//        var booleanBuilder = new BooleanBuilder();
+////            booleanBuilder.and(order.orderDate.after(request.getFrom().atStartOfDay())
+////                    .and((order.orderDate.before(request.getTo().plusDays(1).atStartOfDay()))));
+////
+////        if (!request.getUserIds().isEmpty()) {
+////            booleanBuilder.and(order.user.id.in(request.getUserIds()));
+////        }
+////        if (!request.getExcludedUserIds().isEmpty()) {
+////            booleanBuilder.and(order.user.id.notIn(request.getExcludedUserIds()));
+////        }
+//        return booleanBuilder;
+//    }
+//
+//    private BooleanBuilder buildProductPredicate(OrderProductReportRequest request) {
+////        var booleanBuilder = new BooleanBuilder();
+////        booleanBuilder.and(lineItem.order.orderDate.after(request.getFrom().atStartOfDay())
+////                .and((lineItem.order.orderDate.before(request.getTo().plusDays(1).atStartOfDay()))));
+////
+////        if (!request.getUserIds().isEmpty()) {
+////            booleanBuilder.and(lineItem.order.user.id.in(request.getUserIds()));
+////        }
+////        if (!request.getExcludedUserIds().isEmpty()) {
+////            booleanBuilder.and(lineItem.order.user.id.notIn(request.getExcludedUserIds()));
+////        }
+////        if (!request.getProductIds().isEmpty()) {
+////            booleanBuilder.and(lineItem.product.id.in(request.getProductIds()));
+////        }
+////        if (!request.getExcludedProductIds().isEmpty()) {
+////            booleanBuilder.and(lineItem.product.id.notIn(request.getExcludedProductIds()));
+////        }
+////        if (!request.getProductCategoriesIds().isEmpty()) {
+////            booleanBuilder.and(lineItem.product.productCategory.id.in(request.getProductCategoriesIds()));
+////        }
+////        if (!request.getExcludedProductCategoriesIds().isEmpty()) {
+////            booleanBuilder.and(lineItem.product.productCategory.id.notIn(request.getExcludedProductCategoriesIds()));
+////        }
+//        return null;
+//    }
 }

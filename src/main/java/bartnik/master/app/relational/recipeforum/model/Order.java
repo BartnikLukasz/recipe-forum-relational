@@ -1,9 +1,9 @@
 package bartnik.master.app.relational.recipeforum.model;
 
-import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,24 +14,20 @@ import java.util.UUID;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Entity(name="orders")
+@Document("Orders")
 @AllArgsConstructor
 public class Order {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
-    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @DocumentReference
     private CustomUser user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
+    @DocumentReference(lazy = true)
+    @EqualsAndHashCode.Exclude
     private List<LineItem> items;
 
-    @Column(precision = 6, scale = 2)
     private BigDecimal value;
 
     private LocalDateTime orderDate;

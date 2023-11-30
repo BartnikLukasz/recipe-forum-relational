@@ -1,10 +1,10 @@
 package bartnik.master.app.relational.recipeforum.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,19 +15,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Builder
 @AllArgsConstructor
-@Entity(name = "product_category")
+@Document("ProductCategory")
 public class ProductCategory {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
-    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "productCategory")
+    @DocumentReference(lazy = true)
+    @EqualsAndHashCode.Exclude
     @Builder.Default
     private Set<Product> products = new HashSet<>();
 }

@@ -25,7 +25,7 @@ public class ProductCategoryService {
     }
 
     public ProductCategory updateProductCategory(UUID id, UpdateProductCategoryRequest request) {
-        var productCategory = productCategoryRepository.getReferenceById(id);
+        var productCategory = productCategoryRepository.findById(id).orElseThrow();
         productCategory.setName(request.getName());
         return productCategoryRepository.save(productCategory);
     }
@@ -35,7 +35,7 @@ public class ProductCategoryService {
     }
 
     public ProductCategory getProductsForProductCategory(UUID id) {
-        return productCategoryRepository.getReferenceById(id);
+        return productCategoryRepository.findById(id).orElseThrow();
     }
 
     public List<ProductCategory> getAllProductCategories() {

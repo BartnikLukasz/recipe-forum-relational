@@ -1,10 +1,10 @@
 package bartnik.master.app.relational.recipeforum.model;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.DocumentReference;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -14,12 +14,10 @@ import java.util.UUID;
 @Setter
 @RequiredArgsConstructor
 @AllArgsConstructor
-@Entity(name = "comment")
+@EqualsAndHashCode
+@Document("Comment")
 public class Comment {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name = "id", nullable = false)
-    @JdbcTypeCode(SqlTypes.UUID)
     private UUID id;
 
     @NotBlank
@@ -28,11 +26,9 @@ public class Comment {
     @Builder.Default
     private LocalDate created = LocalDate.now();
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @DocumentReference
     private CustomUser user;
 
-    @ManyToOne
-    @JoinColumn(name = "recipe_id")
+    @DocumentReference
     private Recipe recipe;
 }

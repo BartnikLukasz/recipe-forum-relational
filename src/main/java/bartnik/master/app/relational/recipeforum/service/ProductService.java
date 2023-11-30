@@ -18,7 +18,7 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public Product createProduct(CreateProductRequest request) {
-        var productCategory = productCategoryRepository.getReferenceById(request.getProductCategory());
+        var productCategory = productCategoryRepository.findById(request.getProductCategory()).orElseThrow();
 
         var product = Product.builder()
                 .name(request.getName())
@@ -32,7 +32,7 @@ public class ProductService {
     }
 
     public Product getProductById(UUID id) {
-        return productRepository.getReferenceById(id);
+        return productRepository.findById(id).orElseThrow();
     }
 
     public List<Product> getAllProducts() {
@@ -40,11 +40,11 @@ public class ProductService {
     }
 
     public Product updateProduct(UUID id, UpdateProductRequest request) {
-        var product = productRepository.getReferenceById(id);
+        var product = productRepository.findById(id).orElseThrow();
         var productCategory = product.getProductCategory();
 
         if (!product.getProductCategory().getId().equals(request.getProductCategory())) {
-            productCategory = productCategoryRepository.getReferenceById(request.getProductCategory());
+            productCategory = productCategoryRepository.findById(request.getProductCategory()).orElseThrow();
             product.setProductCategory(productCategory);
         }
         product.apply(request);

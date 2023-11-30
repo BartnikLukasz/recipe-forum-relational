@@ -25,7 +25,7 @@ public class CategoryService {
     }
 
     public Category updateCategory(UUID id, UpdateCategoryRequest request) {
-        var category = categoryRepository.getReferenceById(id);
+        var category = categoryRepository.findById(id).orElseThrow();
         category.setName(request.getName());
         return categoryRepository.save(category);
     }
@@ -35,7 +35,7 @@ public class CategoryService {
     }
 
     public Category getRecipesForCategory(UUID id) {
-        return categoryRepository.getReferenceById(id);
+        return categoryRepository.findById(id).orElseThrow();
     }
 
     public List<Category> getAllCategories() {

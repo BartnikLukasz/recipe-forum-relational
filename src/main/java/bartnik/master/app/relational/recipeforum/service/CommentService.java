@@ -23,7 +23,7 @@ public class CommentService {
     public Comment createComment(UUID recipeId, CreateCommentRequest request) {
         var currentUser = UserUtil.getCurrentUser();
         var user = userRepository.getByUsername(currentUser.getUsername());
-        var recipe = recipeRepository.getReferenceById(recipeId);
+        var recipe = recipeRepository.findById(recipeId).orElseThrow();
         var comment = Comment.builder()
                 .content(request.getContent())
                 .user(user)
@@ -34,7 +34,7 @@ public class CommentService {
     }
 
     public Comment updateComment(UUID id, UpdateCommentRequest request) {
-        var comment = commentRepository.getReferenceById(id);
+        var comment = commentRepository.findById(id).orElseThrow();
         comment.setContent(request.getContent());
         return commentRepository.save(comment);
     }
