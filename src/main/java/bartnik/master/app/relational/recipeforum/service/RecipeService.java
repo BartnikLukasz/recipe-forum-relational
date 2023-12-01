@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -51,9 +50,8 @@ public class RecipeService {
     }
 
     public Page<Recipe> findRecipes(RecipesFilterRequest filter) {
-        Pageable pageable = PageRequest.of(filter.getPageNumber(), filter.getPageSize(), Sort.by(filter.getSortBy()));
-//        return recipeRepository.findAll(buildPredicate(filter), pageable);
-        return null;
+        Pageable pageable = PageRequest.of(filter.getPageNumber(), filter.getPageSize(), Sort.by(Sort.Direction.valueOf(filter.getDirection()), filter.getSortBy()));
+        return recipeRepositoryCrud.findAll(filter, pageable);
     }
 
     public Recipe updateRecipe(UUID id, UpdateRecipeRequest request) {
@@ -88,12 +86,16 @@ public class RecipeService {
         if (!recipeRepositoryCrud.isReactedByUser(id, user.getId(), liked)) {
             var likedRecipes = user.getLikedRecipes();
             var dislikedRecipes = user.getDislikedRecipes();
+            var likedByUsers = recipe.getLikedByUsers();
+            var dislikedByUsers = recipe.getDislikedByUsers();
 
             if (liked) {
                 likedRecipes.add(recipe);
+                likedByUsers.add(user);
                 dislikedRecipes.removeIf(dislikedRecipe -> {
                     if (dislikedRecipe.equals(recipe)) {
                         recipe.setNumberOfDislikes(recipe.getNumberOfDislikes() - 1);
+                        dislikedByUsers.remove(user);
                         return true;
                     }
                     return false;
@@ -101,9 +103,11 @@ public class RecipeService {
                 recipe.setNumberOfLikes(recipe.getNumberOfLikes() + 1);
             } else {
                 dislikedRecipes.add(recipe);
+                dislikedByUsers.add(user);
                 likedRecipes.removeIf(likedRecipe -> {
                     if (likedRecipe.equals(recipe)) {
                         recipe.setNumberOfLikes(recipe.getNumberOfLikes() - 1);
+                        likedByUsers.remove(user);
                         return true;
                     }
                     return false;
@@ -114,19 +118,4 @@ public class RecipeService {
         }
         return recipeRepository.save(recipe);
     }
-
-//    private Predicate buildPredicate(RecipesFilterRequest filter) {
-//        var booleanBuilder = new BooleanBuilder();
-////
-////        Optional.ofNullable(filter.getUserId()).ifPresent(userId -> booleanBuilder.and(recipe.user.id.eq(userId)));
-////        Optional.ofNullable(filter.getTitleContains()).ifPresent(titleContains -> booleanBuilder.and(recipe.title.contains(titleContains)));
-////        Optional.ofNullable(filter.getContentContains()).ifPresent(contentContains -> booleanBuilder.and(recipe.content.contains(contentContains)));
-////        Optional.ofNullable(filter.getIngredientsContains()).ifPresent(ingredientsContains -> booleanBuilder.and(recipe.ingredients.contains(ingredientsContains)));
-////        Optional.ofNullable(filter.getTagsContains()).ifPresent(tagsContains -> booleanBuilder.and(recipe.tags.contains(tagsContains)));
-////        if (!filter.getCategoryIds().isEmpty()) {
-////            booleanBuilder.and(recipe.category.id.in(filter.getCategoryIds()));
-////        }
-//
-//        return booleanBuilder;
-//    }
 }

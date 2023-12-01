@@ -1,5 +1,6 @@
 package bartnik.master.app.relational.recipeforum.model;
 
+import bartnik.master.app.relational.recipeforum.config.UuidIdentifiedEntity;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -20,10 +21,7 @@ import java.util.UUID;
 @EqualsAndHashCode
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class Recipe {
-
-    @Id
-    private UUID id;
+public class Recipe extends UuidIdentifiedEntity {
 
     @NotBlank
     private String title;

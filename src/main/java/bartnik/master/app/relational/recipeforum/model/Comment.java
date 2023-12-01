@@ -1,5 +1,6 @@
 package bartnik.master.app.relational.recipeforum.model;
 
+import bartnik.master.app.relational.recipeforum.config.UuidIdentifiedEntity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -16,9 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @EqualsAndHashCode
 @Document("Comment")
-public class Comment {
-    @Id
-    private UUID id;
+public class Comment extends UuidIdentifiedEntity {
 
     @NotBlank
     private String content;

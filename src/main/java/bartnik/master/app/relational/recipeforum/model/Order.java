@@ -1,5 +1,6 @@
 package bartnik.master.app.relational.recipeforum.model;
 
+import bartnik.master.app.relational.recipeforum.config.UuidIdentifiedEntity;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,10 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Document("Orders")
 @AllArgsConstructor
-public class Order {
-
-    @Id
-    private UUID id;
+public class Order extends UuidIdentifiedEntity {
 
     @DocumentReference
     private CustomUser user;

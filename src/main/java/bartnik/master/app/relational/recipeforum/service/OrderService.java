@@ -5,10 +5,7 @@ import bartnik.master.app.relational.recipeforum.dto.request.OrderProductsReques
 import bartnik.master.app.relational.recipeforum.dto.request.OrderReportRequest;
 import bartnik.master.app.relational.recipeforum.model.LineItem;
 import bartnik.master.app.relational.recipeforum.model.Order;
-import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
-import bartnik.master.app.relational.recipeforum.repository.LineItemRepository;
-import bartnik.master.app.relational.recipeforum.repository.OrderRepository;
-import bartnik.master.app.relational.recipeforum.repository.ProductRepository;
+import bartnik.master.app.relational.recipeforum.repository.*;
 import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.IteratorUtils;
@@ -26,6 +23,7 @@ import java.util.stream.Collectors;
 public class OrderService {
 
     private final OrderRepository orderRepository;
+    private final OrderRepositoryCrud orderRepositoryCrud;
     private final LineItemRepository lineItemRepository;
     private final ProductRepository productRepository;
     private final CustomUserRepository userRepository;
@@ -49,7 +47,6 @@ public class OrderService {
                     .build();
         })
                 .collect(Collectors.toList());
-        items = lineItemRepository.saveAll(items);
 
         var order = Order.builder()
                 .items(items)
@@ -61,57 +58,16 @@ public class OrderService {
                 .build();
 
         items.forEach(item -> item.setOrder(order));
+        lineItemRepository.saveAll(items);
 
         orderRepository.save(order);
     }
 
     public List<Order> generateReport(OrderReportRequest request) {
-//        return IteratorUtils.toList(orderRepository.findAll(buildPredicate(request)).iterator());
-        return orderRepository.findAll();
+        return orderRepositoryCrud.findAll(request);
     }
 
     public List<LineItem> generateProductReport(OrderProductReportRequest request) {
-//        return IteratorUtils.toList(lineItemRepository.findAll(buildProductPredicate(request)).iterator());
-        return lineItemRepository.findAll();
+        return orderRepositoryCrud.findAll(request);
     }
-
-//    private BooleanBuilder buildPredicate(OrderReportRequest request) {
-//        var booleanBuilder = new BooleanBuilder();
-////            booleanBuilder.and(order.orderDate.after(request.getFrom().atStartOfDay())
-////                    .and((order.orderDate.before(request.getTo().plusDays(1).atStartOfDay()))));
-////
-////        if (!request.getUserIds().isEmpty()) {
-////            booleanBuilder.and(order.user.id.in(request.getUserIds()));
-////        }
-////        if (!request.getExcludedUserIds().isEmpty()) {
-////            booleanBuilder.and(order.user.id.notIn(request.getExcludedUserIds()));
-////        }
-//        return booleanBuilder;
-//    }
-//
-//    private BooleanBuilder buildProductPredicate(OrderProductReportRequest request) {
-////        var booleanBuilder = new BooleanBuilder();
-////        booleanBuilder.and(lineItem.order.orderDate.after(request.getFrom().atStartOfDay())
-////                .and((lineItem.order.orderDate.before(request.getTo().plusDays(1).atStartOfDay()))));
-////
-////        if (!request.getUserIds().isEmpty()) {
-////            booleanBuilder.and(lineItem.order.user.id.in(request.getUserIds()));
-////        }
-////        if (!request.getExcludedUserIds().isEmpty()) {
-////            booleanBuilder.and(lineItem.order.user.id.notIn(request.getExcludedUserIds()));
-////        }
-////        if (!request.getProductIds().isEmpty()) {
-////            booleanBuilder.and(lineItem.product.id.in(request.getProductIds()));
-////        }
-////        if (!request.getExcludedProductIds().isEmpty()) {
-////            booleanBuilder.and(lineItem.product.id.notIn(request.getExcludedProductIds()));
-////        }
-////        if (!request.getProductCategoriesIds().isEmpty()) {
-////            booleanBuilder.and(lineItem.product.productCategory.id.in(request.getProductCategoriesIds()));
-////        }
-////        if (!request.getExcludedProductCategoriesIds().isEmpty()) {
-////            booleanBuilder.and(lineItem.product.productCategory.id.notIn(request.getExcludedProductCategoriesIds()));
-////        }
-//        return null;
-//    }
 }

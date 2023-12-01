@@ -1,5 +1,6 @@
 package bartnik.master.app.relational.recipeforum.model;
 
+import bartnik.master.app.relational.recipeforum.config.UuidIdentifiedEntity;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -16,10 +17,7 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @Document("ProductCategory")
-public class ProductCategory {
-
-    @Id
-    private UUID id;
+public class ProductCategory extends UuidIdentifiedEntity {
 
     @NotBlank
     private String name;
