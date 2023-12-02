@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface LineItemRepository extends MongoRepository<LineItem, UUID>, QuerydslPredicateExecutor<LineItem> {
+public interface LineItemRepository extends MongoRepository<LineItem, UUID> {
 
 }

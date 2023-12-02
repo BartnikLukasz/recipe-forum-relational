@@ -30,7 +30,12 @@ public class CommentService {
                 .recipe(recipe)
                 .build();
 
-        return commentRepository.save(comment);
+        comment = commentRepository.save(comment);
+        recipe.getComments().add(comment);
+        user.getComments().add(comment);
+        recipeRepository.save(recipe);
+        userRepository.save(user);
+        return comment;
     }
 
     public Comment updateComment(UUID id, UpdateCommentRequest request) {

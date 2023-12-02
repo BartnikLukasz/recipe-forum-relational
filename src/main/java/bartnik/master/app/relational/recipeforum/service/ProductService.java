@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -28,7 +29,10 @@ public class ProductService {
                 .productCategory(productCategory)
                 .build();
 
-        return productRepository.save(product);
+        product = productRepository.save(product);
+        productCategory.getProducts().add(product);
+        productCategoryRepository.save(productCategory);
+        return product;
     }
 
     public Product getProductById(UUID id) {
@@ -44,12 +48,20 @@ public class ProductService {
         var productCategory = product.getProductCategory();
 
         if (!product.getProductCategory().getId().equals(request.getProductCategory())) {
-            productCategory = productCategoryRepository.findById(request.getProductCategory()).orElseThrow();
+            productCategory.getProducts().remove(product);
+            var newProductCategory = productCategoryRepository.findById(request.getProductCategory()).orElseThrow();
             product.setProductCategory(productCategory);
+            product.apply(request);
+
+            product = productRepository.save(product);
+            newProductCategory.getProducts().add(product);
+            productCategoryRepository.saveAll(Set.of(productCategory, newProductCategory));
+            return product;
         }
         product.apply(request);
 
         return productRepository.save(product);
+
     }
 
     public void deleteProduct(UUID id) {

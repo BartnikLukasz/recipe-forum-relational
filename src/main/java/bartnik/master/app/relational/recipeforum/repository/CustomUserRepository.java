@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CustomUserRepository extends MongoRepository<CustomUser, UUID>, QuerydslPredicateExecutor<Recipe> {
+public interface CustomUserRepository extends MongoRepository<CustomUser, UUID> {
     Optional<CustomUser> findByUsername(String username);
     default CustomUser getByUsername(String username) {
         return findByUsername(username).orElseThrow();

@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.UUID;
 
 @Repository
-public interface RecipeRepository extends MongoRepository<Recipe, UUID>, QuerydslPredicateExecutor<Recipe> {
+public interface RecipeRepository extends MongoRepository<Recipe, UUID> {
 
 }

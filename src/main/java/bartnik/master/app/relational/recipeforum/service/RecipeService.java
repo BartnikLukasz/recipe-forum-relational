@@ -17,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Service
@@ -42,7 +43,12 @@ public class RecipeService {
                 .category(category)
                 .build();
 
-        return recipeRepository.save(recipe);
+        recipe = recipeRepository.save(recipe);
+        category.getRecipes().add(recipe);
+        user.getRecipes().add(recipe);
+        categoryRepository.save(category);
+        userRepository.save(user);
+        return recipe;
     }
 
     public Recipe getRecipeById(UUID id) {
@@ -59,8 +65,16 @@ public class RecipeService {
         var category = recipe.getCategory();
 
         if (!recipe.getCategory().getId().equals(request.getCategory())) {
-            category = categoryRepository.findById(request.getCategory()).orElseThrow();
+            category.getRecipes().remove(recipe);
+            var newCategory = categoryRepository.findById(request.getCategory()).orElseThrow();
             recipe.setCategory(category);
+
+            recipe.apply(request);
+
+            recipe = recipeRepository.save(recipe);
+            newCategory.getRecipes().add(recipe);
+            categoryRepository.saveAll(Set.of(category, newCategory));
+            return recipe;
         }
         recipe.apply(request);
 
@@ -70,11 +84,14 @@ public class RecipeService {
     public void deleteRecipe(UUID id) {
         var currentUser = UserUtil.getCurrentUser();
         var recipe = recipeRepository.findById(id).orElseThrow();
+        var category = categoryRepository.findById(recipe.getCategory().getId()).orElseThrow();
+        category.getRecipes().remove(recipe);
 
         if (!currentUser.getUsername().equals(recipe.getUser().getUsername()) || UserUtil.isCurrentUserAdmin()) {
             throw new AccessDeniedException("User is not admin or the owner of this recipe.");
         }
 
+        categoryRepository.save(category);
         recipeRepository.deleteById(id);
     }
 

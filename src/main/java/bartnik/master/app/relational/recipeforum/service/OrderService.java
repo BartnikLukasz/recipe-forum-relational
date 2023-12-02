@@ -58,9 +58,11 @@ public class OrderService {
                 .build();
 
         items.forEach(item -> item.setOrder(order));
+        var savedOrder = orderRepository.save(order);
+        user.getOrders().add(savedOrder);
+        userRepository.save(user);
         lineItemRepository.saveAll(items);
-
-        orderRepository.save(order);
+        orderRepository.save(savedOrder);
     }
 
     public List<Order> generateReport(OrderReportRequest request) {

@@ -52,15 +52,15 @@ public class OrderRepositoryCrud {
             productQuery.addCriteria(where("_id").not().in(request.getExcludedProductIds()));
         }
         if (!request.getProductCategoriesIds().isEmpty()) {
-            productQuery.addCriteria(where("category").in(request.getProductCategoriesIds()));
+            productQuery.addCriteria(where("productCategory").in(request.getProductCategoriesIds()));
         }
         if (!request.getExcludedProductCategoriesIds().isEmpty()) {
-            productQuery.addCriteria(where("category").not().in(request.getExcludedProductCategoriesIds()));
+            productQuery.addCriteria(where("productCategory").not().in(request.getExcludedProductCategoriesIds()));
         }
         orderQuery.fields().include("_id");
         productQuery.fields().include("_id");
-        var orders = mongoTemplate.find(query, Order.class).stream().map(Order::getId).toList();
-        var products = mongoTemplate.find(query, Product.class).stream().map(Product::getId).toList();
+        var orders = mongoTemplate.find(orderQuery, Order.class).stream().map(Order::getId).toList();
+        var products = mongoTemplate.find(productQuery, Product.class).stream().map(Product::getId).toList();
         query.addCriteria(where("order").in(orders));
         query.addCriteria(where("product").in(products));
         return mongoTemplate.find(query, LineItem.class);
