@@ -4,15 +4,16 @@ import bartnik.master.app.relational.recipeforum.model.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -28,57 +29,28 @@ public class CustomUserRepositoryCrud {
     }
 
     public Set<Recipe> getRecommendations(Integer size, UUID userId) {
-//        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-//
-//        var culr = new QCustomUserLikedRecipes("culr");
-//        var culr2 = new QCustomUserLikedRecipes("culr2");
-//        var culr3 = new QCustomUserLikedRecipes("culr3");
-//
-//        Set<UserRatedRecipe> recommendedRecipes = queryFactory.select(culr3.recipeId, culr3.userId)
-//                .from(culr, culr2, culr3)
-//                .where(culr.userId.eq(userId)
-//                        .and(culr.recipeId.eq(culr2.recipeId))
-//                        .and(culr2.userId.ne(userId))
-//                        .and(culr3.userId.eq(culr2.userId))
-//                        .and(culr3.recipeId.notIn(
-//                                JPAExpressions.select(customUserLikedRecipes.recipeId)
-//                                        .from(customUserLikedRecipes)
-//                                        .where(customUserLikedRecipes.userId.eq(userId))
-//                                        .distinct()
-//                        ))
-//                )
-//                .fetch().stream()
-//                .map(tuple -> {
-//                    UserRatedRecipe userRatedRecipe = new UserRatedRecipe();
-//                    userRatedRecipe.setRecipeId(tuple.get(culr3.recipeId));
-//                    userRatedRecipe.setUserId(tuple.get(culr3.userId));
-//                    return userRatedRecipe;
-//                })
-//                .collect(Collectors.toSet());
-//
-//        return new HashSet<>(queryFactory.select(recipe)
-//                .from(recipe, customUserLikedRecipes)
-//                .where(customUserLikedRecipes.recipeId.eq(recipe.id)
-//                        .and(customUserLikedRecipes.userId.in(recommendedRecipes.stream()
-//                                .map(UserRatedRecipe::getUserId)
-//                                .toList()))
-//                        .and(customUserLikedRecipes.recipeId.in(recommendedRecipes.stream()
-//                                .map(UserRatedRecipe::getRecipeId)
-//                                .toList())))
-//                .groupBy(recipe.id)
-//                .orderBy(recipe.count().desc())
-//                .limit(size)
-//                .fetch());
 
-        return null;
-    }
+        var userLikedRecipes = mongoTemplate.find(Query.query(Criteria.where("id").is(userId)), CustomUser.class)
+                .get(0).getLikedRecipes().stream().map(Recipe::getId).toList();
 
+        var similarUsers = mongoTemplate.aggregate(
+                Aggregation.newAggregation(
+                        Aggregation.match(Criteria.where("likedRecipes").in(userLikedRecipes).and("id").ne(userId)),
+                        Aggregation.unwind("likedRecipes"),
+                        Aggregation.group("id").addToSet("likedRecipes").as("likedRecipes")
+                ), CustomUser.class, CustomUser.class).getMappedResults().stream().map(CustomUser::getId).toList();
 
+        var recommendedRecipeIds = mongoTemplate.aggregate(
+                Aggregation.newAggregation(
+                        Aggregation.match(Criteria.where("id").in(similarUsers)),
+                        Aggregation.unwind("likedRecipes"),
+                        Aggregation.match(Criteria.where("likedRecipes").nin(userLikedRecipes)),
+                        Aggregation.group("likedRecipes").count().as("count"),
+                        Aggregation.sort(Sort.Direction.DESC, "count"),
+                        Aggregation.limit(size)
+                ), CustomUser.class, Recipe.class).getMappedResults().stream().map(Recipe::getId).collect(Collectors.toList());
 
-    @Setter
-    @Getter
-    private class UserRatedRecipe {
-        private UUID recipeId;
-        private UUID userId;
+        return new HashSet<>(mongoTemplate.find(Query.query(Criteria.where("id").in(recommendedRecipeIds)), Recipe.class));
+
     }
 }
