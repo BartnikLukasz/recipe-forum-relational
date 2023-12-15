@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.SqlTypes;
 
@@ -33,11 +34,11 @@ public class Recipe {
     @NotBlank
     private String title;
 
-    @Lob
+    @Column(length = 65535)
     @NotBlank
     private String content;
 
-    @Lob
+    @Column(length = 65535)
     @NotBlank
     private String ingredients;
 
