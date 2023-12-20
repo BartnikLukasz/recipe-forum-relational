@@ -26,10 +26,17 @@ services:
         "spring.jpa.properties.hibernate.dialect" : "org.hibernate.dialect.MySQL8Dialect",
         "spring.jpa.hibernate.ddl-auto" : "update"
       }'
+      JAVA_OPTS: "-Xmx8g -Xms4g"
     volumes:
       - .m2:/root/.m2
     stdin_open: true
     tty: true
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 4G
 
 volumes:
   db:

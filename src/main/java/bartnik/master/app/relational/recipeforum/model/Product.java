@@ -28,9 +28,10 @@ public class Product {
     @NotBlank
     private String name;
 
+    @Column(length = 65535, columnDefinition = "longtext")
     private String description;
 
-    @Column(precision = 4, scale = 2)
+    @Column(precision = 5, scale = 2)
     private BigDecimal price;
 
     @Builder.Default

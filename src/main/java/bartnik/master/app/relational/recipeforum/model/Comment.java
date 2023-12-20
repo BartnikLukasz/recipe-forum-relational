@@ -23,6 +23,7 @@ public class Comment {
     private UUID id;
 
     @NotBlank
+    @Column(length = 65535, columnDefinition = "longtext")
     private String content;
 
     @Builder.Default

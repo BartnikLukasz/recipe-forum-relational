@@ -34,11 +34,11 @@ public class Recipe {
     @NotBlank
     private String title;
 
-    @Column(length = 65535)
+    @Column(length = 65535, columnDefinition = "longtext")
     @NotBlank
     private String content;
 
-    @Column(length = 65535)
+    @Column(length = 65535, columnDefinition = "longtext")
     @NotBlank
     private String ingredients;
 

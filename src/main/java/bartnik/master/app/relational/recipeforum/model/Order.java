@@ -31,7 +31,7 @@ public class Order {
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<LineItem> items;
 
-    @Column(precision = 6, scale = 2)
+    @Column(precision = 8, scale = 2)
     private BigDecimal value;
 
     private LocalDateTime orderDate;
