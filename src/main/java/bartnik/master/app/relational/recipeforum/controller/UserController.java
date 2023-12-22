@@ -19,6 +19,6 @@ public class UserController {
 
     @GetMapping("/recommendations")
     public ResponseEntity<List<RecipeLiteResponse>> getRecommendations(@RequestParam("size") Integer size) {
-        return ResponseEntity.ok(recipeMapper.mapLite(userService.getRecommendations(size)));
+        return ResponseEntity.ok(recipeMapper.mapLite(userService.getCustomRecommendations(size)));
     }
 }
