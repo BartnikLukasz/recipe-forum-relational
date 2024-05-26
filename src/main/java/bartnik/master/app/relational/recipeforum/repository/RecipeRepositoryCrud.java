@@ -1,12 +1,12 @@
 package bartnik.master.app.relational.recipeforum.repository;
 
 import bartnik.master.app.relational.recipeforum.dto.request.RecipesFilterRequest;
+import bartnik.master.app.relational.recipeforum.model.CustomUser;
 import bartnik.master.app.relational.recipeforum.model.Recipe;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Component;
@@ -45,23 +45,16 @@ public class RecipeRepositoryCrud {
     }
 
     public boolean isReactedByUser(UUID recipeId, UUID userId, boolean liked) {
+        Query query = new Query();
 
-//        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
-//
-//        BooleanBuilder builder = new BooleanBuilder();
-//
-//        if (liked) {
-//            builder.and(customUser.likedRecipes.any().id.eq(recipeId));
-//        }
-//        else {
-//            builder.and(customUser.dislikedRecipes.any().id.eq(recipeId));
-//        }
-//
-//        return queryFactory.select(customUser.id)
-//                .from(customUser)
-//                .where(customUser.id.eq(userId).and(builder))
-//                .fetchOne() != null;
-        return false;
+        query.addCriteria(where("_id").is(userId));
+
+        if (liked) {
+            query.addCriteria(where("likedRecipes").in(recipeId));
+        } else {
+            query.addCriteria(where("dislikedRecipes").in(recipeId));
+        }
+        return mongoTemplate.exists(query, CustomUser.class);
     }
 
 }

@@ -4,10 +4,7 @@ import bartnik.master.app.relational.recipeforum.dto.request.CreateRecipeRequest
 import bartnik.master.app.relational.recipeforum.dto.request.RecipesFilterRequest;
 import bartnik.master.app.relational.recipeforum.dto.request.UpdateRecipeRequest;
 import bartnik.master.app.relational.recipeforum.model.Recipe;
-import bartnik.master.app.relational.recipeforum.repository.CategoryRepository;
-import bartnik.master.app.relational.recipeforum.repository.CustomUserRepository;
-import bartnik.master.app.relational.recipeforum.repository.RecipeRepository;
-import bartnik.master.app.relational.recipeforum.repository.RecipeRepositoryCrud;
+import bartnik.master.app.relational.recipeforum.repository.*;
 import bartnik.master.app.relational.recipeforum.util.UserUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -28,6 +25,7 @@ public class RecipeService {
     private final CategoryRepository categoryRepository;
     private final RecipeRepository recipeRepository;
     private final RecipeRepositoryCrud recipeRepositoryCrud;
+    private final CommentRepository commentRepository;
 
     public Recipe createRecipe(CreateRecipeRequest request) {
         var currentUser = UserUtil.getCurrentUser();
@@ -52,7 +50,9 @@ public class RecipeService {
     }
 
     public Recipe getRecipeById(UUID id) {
-        return recipeRepository.findById(id).orElseThrow();
+        var recipe =  recipeRepository.findById(id).orElseThrow();
+        recipe.setComments(commentRepository.findAllByRecipe_Id(id));
+        return recipe;
     }
 
     public Page<Recipe> findRecipes(RecipesFilterRequest filter) {
