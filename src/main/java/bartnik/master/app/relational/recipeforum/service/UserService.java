@@ -23,7 +23,7 @@ public class UserService {
         var currentUser = UserUtil.getCurrentUser();
         var user = customUserRepository.getByUsername(currentUser.getUsername());
         var recommendedIds = customUserRepository.getRecommendations(user.getId().toString(), size).stream()
-                .map(bytes -> uuidConverter.convert(bytes)).toList();
+                .map(uuidConverter::convert).toList();
         return new HashSet<>(recipeRepository.findAllById(recommendedIds));
     }
 }
