@@ -56,7 +56,9 @@ public class RecipeService {
     }
 
     public Page<Recipe> findRecipes(RecipesFilterRequest filter) {
-        Pageable pageable = PageRequest.of(filter.getPageNumber(), filter.getPageSize(), Sort.by(Sort.Direction.valueOf(filter.getDirection()), filter.getSortBy()));
+        Pageable pageable = PageRequest.of(filter.getPageNumber(),
+                filter.getPageSize(),
+                Sort.by(Sort.Direction.valueOf(filter.getDirection()), filter.getSortBy()));
         return recipeRepositoryCrud.findAll(filter, pageable);
     }
 

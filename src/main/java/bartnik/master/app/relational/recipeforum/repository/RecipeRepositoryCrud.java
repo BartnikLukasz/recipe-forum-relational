@@ -30,11 +30,20 @@ public class RecipeRepositoryCrud {
     public Page<Recipe> findAll(RecipesFilterRequest filter, Pageable pageable) {
         Query query = new Query();
 
-        Optional.ofNullable(filter.getUserId()).ifPresent(userId -> query.addCriteria(where("_id").is(userId)));
-        Optional.ofNullable(filter.getTitleContains()).ifPresent(titleContains -> query.addCriteria(where("title").regex(Pattern.compile(Pattern.quote(titleContains), Pattern.CASE_INSENSITIVE))));
-        Optional.ofNullable(filter.getContentContains()).ifPresent(contentContains -> query.addCriteria(where("title").regex(Pattern.compile(Pattern.quote(contentContains), Pattern.CASE_INSENSITIVE))));
-        Optional.ofNullable(filter.getIngredientsContains()).ifPresent(ingredientsContains -> query.addCriteria(where("title").regex(Pattern.compile(Pattern.quote(ingredientsContains), Pattern.CASE_INSENSITIVE))));
-        Optional.ofNullable(filter.getTagsContains()).ifPresent(tagsContains -> query.addCriteria(where("title").regex(Pattern.compile(Pattern.quote(tagsContains), Pattern.CASE_INSENSITIVE))));
+        Optional.ofNullable(filter.getUserId()).ifPresent(userId ->
+                query.addCriteria(where("_id").is(userId)));
+        Optional.ofNullable(filter.getTitleContains()).ifPresent(titleContains ->
+                query.addCriteria(where("title")
+                        .regex(Pattern.compile(Pattern.quote(titleContains), Pattern.CASE_INSENSITIVE))));
+        Optional.ofNullable(filter.getContentContains()).ifPresent(contentContains ->
+                query.addCriteria(where("content")
+                        .regex(Pattern.compile(Pattern.quote(contentContains), Pattern.CASE_INSENSITIVE))));
+        Optional.ofNullable(filter.getIngredientsContains()).ifPresent(ingredientsContains ->
+                query.addCriteria(where("ingredients")
+                        .regex(Pattern.compile(Pattern.quote(ingredientsContains), Pattern.CASE_INSENSITIVE))));
+        Optional.ofNullable(filter.getTagsContains()).ifPresent(tagsContains ->
+                query.addCriteria(where("tags")
+                        .regex(Pattern.compile(Pattern.quote(tagsContains), Pattern.CASE_INSENSITIVE))));
         if (!filter.getCategoryIds().isEmpty()) {
             query.addCriteria(where("category").in(filter.getCategoryIds()));
         }

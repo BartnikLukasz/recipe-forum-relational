@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,8 @@ public class CustomUserRepositoryCrud {
         var userLikedRecipes = mongoTemplate.find(Query.query(Criteria.where("id").is(userId)), CustomUser.class)
                 .get(0).getLikedRecipes().stream().map(Recipe::getId).toList();
 
+        AggregationOptions options = AggregationOptions.builder().allowDiskUse(true).build();
+
         var similarUsersWithCommonLikes = mongoTemplate.aggregate(
                         Aggregation.newAggregation(
                                 Aggregation.match(Criteria.where("likedRecipes").in(userLikedRecipes).and("id").ne(userId)),
@@ -41,7 +44,7 @@ public class CustomUserRepositoryCrud {
                                         .count().as("commonLikes")
                                         .addToSet("likedRecipes").as("commonLikedRecipes"),
                                 Aggregation.lookup(
-                                        "CustomUser", // assuming the collection name is "users"
+                                        "CustomUser",
                                         "_id",
                                         "_id",
                                         "allUserLikes"
@@ -51,11 +54,12 @@ public class CustomUserRepositoryCrud {
                                         .first("commonLikes").as("commonLikes")
                                         .first("commonLikedRecipes").as("commonLikedRecipes")
                                         .addToSet("allUserLikes.likedRecipes").as("allLikedRecipes")
-                        ), CustomUser.class, Map.class)
+                        ).withOptions(options), CustomUser.class, Map.class)
                 .getMappedResults().stream()
                 .collect(Collectors.toMap(
                         map -> (UUID) map.get("_id"),
-                        map -> new AbstractMap.SimpleEntry<>(((Number) map.get("commonLikes")).intValue(), ((List<List<UUID>>) map.get("allLikedRecipes")).stream().flatMap(List::stream).toList())
+                        map -> new AbstractMap.SimpleEntry<>(((Number) map.get("commonLikes")).intValue(),
+                                ((List<List<UUID>>) map.get("allLikedRecipes")).stream().flatMap(List::stream).toList())
                 ));
 
         var recommendedRecipeIdsAndCountMap = mongoTemplate.aggregate(
@@ -66,7 +70,7 @@ public class CustomUserRepositoryCrud {
                         Aggregation.group("likedRecipes").count().as("count"),
                         Aggregation.sort(Sort.Direction.DESC, "count"),
                         Aggregation.limit(size*10)
-                ), CustomUser.class, Map.class).getMappedResults().stream()
+                ).withOptions(options), CustomUser.class, Map.class).getMappedResults().stream()
                 .collect(Collectors.toMap(map -> (UUID) map.get("_id"), map -> ((Number) map.get("count")).intValue()));
 
         Map<UUID, Integer> returned = new HashMap<>();
