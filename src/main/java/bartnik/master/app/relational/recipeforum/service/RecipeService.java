@@ -55,7 +55,9 @@ public class RecipeService {
     }
 
     public Page<Recipe> findRecipes(RecipesFilterRequest filter) {
-        Pageable pageable = PageRequest.of(filter.getPageNumber(), filter.getPageSize(), Sort.by(Sort.Direction.valueOf(filter.getDirection()), filter.getSortBy()));
+        Pageable pageable = PageRequest.of(filter.getPageNumber(),
+                filter.getPageSize(),
+                Sort.by(Sort.Direction.valueOf(filter.getDirection()), filter.getSortBy()));
         return recipeRepository.findAll(buildPredicate(filter), pageable);
     }
 
@@ -121,11 +123,16 @@ public class RecipeService {
     private Predicate buildPredicate(RecipesFilterRequest filter) {
         var booleanBuilder = new BooleanBuilder();
 
-        Optional.ofNullable(filter.getUserId()).ifPresent(userId -> booleanBuilder.and(recipe.user.id.eq(userId)));
-        Optional.ofNullable(filter.getTitleContains()).ifPresent(titleContains -> booleanBuilder.and(recipe.title.contains(titleContains)));
-        Optional.ofNullable(filter.getContentContains()).ifPresent(contentContains -> booleanBuilder.and(recipe.content.contains(contentContains)));
-        Optional.ofNullable(filter.getIngredientsContains()).ifPresent(ingredientsContains -> booleanBuilder.and(recipe.ingredients.contains(ingredientsContains)));
-        Optional.ofNullable(filter.getTagsContains()).ifPresent(tagsContains -> booleanBuilder.and(recipe.tags.contains(tagsContains)));
+        Optional.ofNullable(filter.getUserId()).ifPresent(userId ->
+                booleanBuilder.and(recipe.user.id.eq(userId)));
+        Optional.ofNullable(filter.getTitleContains()).ifPresent(titleContains ->
+                booleanBuilder.and(recipe.title.contains(titleContains)));
+        Optional.ofNullable(filter.getContentContains()).ifPresent(contentContains ->
+                booleanBuilder.and(recipe.content.contains(contentContains)));
+        Optional.ofNullable(filter.getIngredientsContains()).ifPresent(ingredientsContains ->
+                booleanBuilder.and(recipe.ingredients.contains(ingredientsContains)));
+        Optional.ofNullable(filter.getTagsContains()).ifPresent(tagsContains ->
+                booleanBuilder.and(recipe.tags.contains(tagsContains)));
         if (!filter.getCategoryIds().isEmpty()) {
             booleanBuilder.and(recipe.category.id.in(filter.getCategoryIds()));
         }

@@ -73,10 +73,6 @@ public class OrderService {
         return IteratorUtils.toList(orderRepository.findAll(buildPredicate(request)).iterator());
     }
 
-    public List<LineItem> generateProductReport(OrderProductReportRequest request) {
-        return IteratorUtils.toList(lineItemRepository.findAll(buildProductPredicate(request)).iterator());
-    }
-
     private BooleanBuilder buildPredicate(OrderReportRequest request) {
         var booleanBuilder = new BooleanBuilder();
             booleanBuilder.and(order.orderDate.after(request.getFrom().atStartOfDay())
@@ -89,6 +85,10 @@ public class OrderService {
             booleanBuilder.and(order.user.id.notIn(request.getExcludedUserIds()));
         }
         return booleanBuilder;
+    }
+
+    public List<LineItem> generateProductReport(OrderProductReportRequest request) {
+        return IteratorUtils.toList(lineItemRepository.findAll(buildProductPredicate(request)).iterator());
     }
 
     private BooleanBuilder buildProductPredicate(OrderProductReportRequest request) {
